@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FASHION QUEEN — Moda Imperiyasi O‘yini</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Three.js for 3D Showroom -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js" defer></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/state.js" defer></script>
+  <script src="js/dressRenderer.js" defer></script>
+  <script src="js/designStudio.js" defer></script>
+  <script src="js/coloringStudio.js" defer></script>
+  <script src="js/sewingStudio.js" defer></script>
+  <script src="js/showroom3d.js" defer></script>
+  <script src="js/academyAndMissions.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <!-- Ambient Sparkles & Butterflies -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- Top Luxury HUD -->
+  <header class="top-hud">
+    <div class="hud-left">
+      <button class="brand-btn" onclick="FQ.nav('home')" title="Bosh sahifa">
+        <span class="crown-icon">👑</span>
+        <span class="brand-text">FASHION QUEEN</span>
+      </button>
+      <div class="player-pill" onclick="FQ.openAvatarModal()">
+        <div class="avatar-ring" id="hud-avatar">👸</div>
+        <div class="player-meta">
+          <div class="player-name" id="hud-player-name">Malika Dizayner</div>
+          <div class="player-level" id="hud-player-level">1-daraja • Boshlovchi</div>
+          <div class="xp-bar"><div class="xp-fill" id="hud-xp-fill" style="width: 20%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud-right">
+      <div class="stat-pill coins-pill" title="Tangalar">
+        <span class="coin-spin">🪙</span>
+        <span id="hud-coins">1250</span>
+      </div>
+      <div class="stat-pill gems-pill" title="Yaratilgan liboslar">
+        <span>👗</span>
+        <span id="hud-dresses-count">0</span>
+      </div>
+      <button class="icon-btn" id="sound-toggle" onclick="FQ.toggleSound()" title="Ovozni yoqish/o‘chirish">🔊</button>
+    </div>
+  </header>
+
+  <!-- Main Shell -->
+  <div class="app-shell">
+    <!-- Left Palace Navigation -->
+    <aside class="side-nav">
+      <button class="nav-btn active" data-screen="home" onclick="FQ.nav('home')">
+        <span class="nav-ico">🏰</span><span>Bosh sahifa</span>
+      </button>
+      <button class="nav-btn" data-screen="design" onclick="FQ.nav('design')">
+        <span class="nav-ico">✏️</span><span>1. Dizayn chizish</span>
+      </button>
+      <button class="nav-btn" data-screen="coloring" onclick="FQ.nav('coloring')">
+        <span class="nav-ico">🎨</span><span>2. Bo‘yash va bezash</span>
+      </button>
+      <button class="nav-btn" data-screen="sewing" onclick="FQ.nav('sewing')">
+        <span class="nav-ico">🧵</span><span>3. Tikish studiyasi</span>
+      </button>
+      <button class="nav-btn" data-screen="showroom" onclick="FQ.nav('showroom')">
+        <span class="nav-ico">🏛️</span><span>4. 3D Moda do‘koni</span>
+      </button>
+      <div class="nav-divider"></div>
+      <button class="nav-btn" data-screen="academy" onclick="FQ.nav('academy')">
+        <span class="nav-ico">🎓</span><span>Moda Akademiyasi</span>
+      </button>
+      <button class="nav-btn" data-screen="missions" onclick="FQ.nav('missions')">
+        <span class="nav-ico">🎯</span><span>Topshiriqlar</span>
+      </button>
+      <button class="nav-btn" data-screen="shop" onclick="FQ.nav('shop')">
+        <span class="nav-ico">🛍️</span><span>Matolar do‘koni</span>
+      </button>
+      <button class="nav-btn" data-screen="contest" onclick="FQ.nav('contest')">
+        <span class="nav-ico">🏆</span><span>Moda tanlovi</span>
+      </button>
+    </aside>
+
+    <!-- Main Viewport -->
+    <main class="main-stage">
+      <!-- ==================== 1. HOME / PALACE MENU ==================== -->
+      <section id="screen-home" class="screen active">
+        <div class="palace-hero">
+          <div class="hero-content">
+            <div class="hero-badge">✨ Hashamatli Moda Saroyi</div>
+            <h1 class="hero-title">FASHION QUEEN</h1>
+            <p class="hero-subtitle">
+              O‘z moda imperiyangizni quring! Libos chizing, rang va naqshlar bilan bezating,
+              tikuv mashinasida tiking va 3D butikingizda soting.
+            </p>
+            <div class="hero-actions">
+              <button class="btn-play-glow" onclick="FQ.startNewWorkflow()">
+                <span class="play-triangle">▶</span> O‘YNASHNI BOSHLASH
+              </button>
+              <button class="btn-glass" onclick="FQ.nav('academy')">🎓 Moda Akademiyasi</button>
+              <button class="btn-glass" onclick="FQ.nav('showroom')">🏛️ 3D Butik</button>
+            </div>
+
+            <!-- Daily Mission Preview Card -->
+            <div class="daily-card" id="home-daily-card">
+              <div class="daily-header">
+                <span>🎯 Kundalik Topshiriq</span>
+                <span class="reward-tag">+250 🪙</span>
+              </div>
+              <div class="daily-title" id="home-daily-title">Malika uchun kechki libos yarating</div>
+              <div class="daily-steps" id="home-daily-steps">
+                <span class="step-chip">1. Chizish</span>
+                <span class="step-chip">2. Bo‘yash</span>
+                <span class="step-chip">3. Tikish</span>
+                <span class="step-chip">4. Sotish</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-showcase">
+            <div class="palace-arch">
+              <canvas id="home-mannequin-canvas" width="320" height="420"></canvas>
+              <div class="showcase-caption" id="home-dress-label">Qirollik Binafsha Libosi</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Core Workflow Cards -->
+        <div class="workflow-grid">
+          <div class="wf-card" onclick="FQ.nav('design')">
+            <div class="wf-num">1</div>
+            <div class="wf-icon">✏️</div>
+            <h3>Dizayn Chizish</h3>
+            <p>Fason, yoqa, yeng va etak tanlang yoki qalam bilan noldan chizing.</p>
+          </div>
+          <div class="wf-card" onclick="FQ.nav('coloring')">
+            <div class="wf-num">2</div>
+            <div class="wf-icon">🎨</div>
+            <h3>Bo‘yash va Bezash</h3>
+            <p>Qismlarni bo‘yang, ipak/baxmal mato, gullar va olmoslar qo‘shing.</p>
+          </div>
+          <div class="wf-card" onclick="FQ.nav('sewing')">
+            <div class="wf-num">3</div>
+            <div class="wf-icon">🧵</div>
+            <h3>Tikish Jarayoni</h3>
+            <p>O‘lchang, qaychi bilan bicheng, mashinada tiking va tugma taqing.</p>
+          </div>
+          <div class="wf-card" onclick="FQ.nav('showroom')">
+            <div class="wf-num">4</div>
+            <div class="wf-icon">🏛️</div>
+            <h3>3D Moda Do‘koni</h3>
+            <p>Manekenlarda aylantirib ko‘ring, kolleksiya yig‘ing va tangaga soting.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 2. DESIGN STUDIO ==================== -->
+      <section id="screen-design" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>✏️ 1-Bosqich: Dizayn Chizish Studiyasi</h2>
+            <p>Shablon tanlang va qalam/cho‘tka bilan o‘z noyob chizmangizni yarating</p>
+          </div>
+          <div class="studio-next">
+            <button class="btn-gold" onclick="FQ.saveAndGoColoring()">Keyingi: Bo‘yashga o‘tish ➜</button>
+          </div>
+        </div>
+
+        <div class="studio-layout">
+          <!-- Left Tools -->
+          <div class="tool-panel">
+            <h4>🛠️ Chizish Asboblari</h4>
+            <div class="tool-grid">
+              <button class="tool-btn active" data-tool="pencil" onclick="FQ.design.setTool('pencil', this)">✏️ Qalam</button>
+              <button class="tool-btn" data-tool="brush" onclick="FQ.design.setTool('brush', this)">🖌️ Cho‘tka</button>
+              <button class="tool-btn" data-tool="glitter" onclick="FQ.design.setTool('glitter', this)">✨ Yaltiroq</button>
+              <button class="tool-btn" data-tool="eraser" onclick="FQ.design.setTool('eraser', this)">🧽 O‘chirg‘ich</button>
+            </div>
+
+            <label class="toggle-row">
+              <input type="checkbox" id="symmetry-toggle" checked onchange="FQ.design.setSymmetry(this.checked)" />
+              <span>🪞 Simmetrik chizish (2 tomonlama)</span>
+            </label>
+
+            <div class="slider-group">
+              <label>Chiziq qalinligi: <span id="brush-size-val">4</span>px</label>
+              <input type="range" min="1" max="24" value="4" oninput="FQ.design.setSize(this.value)" />
+            </div>
+
+            <div class="slider-group">
+              <label>Qalam rangi:</label>
+              <div class="mini-colors" id="design-colors"></div>
+            </div>
+
+            <div class="action-row">
+              <button class="btn-sm" onclick="FQ.design.undo()">↩️ Bekor</button>
+              <button class="btn-sm" onclick="FQ.design.redo()">↪️ Qaytar</button>
+              <button class="btn-sm" onclick="FQ.design.zoom(0.15)">🔍+</button>
+              <button class="btn-sm" onclick="FQ.design.zoom(-0.15)">🔍-</button>
+            </div>
+            <button class="btn-danger-sm" onclick="FQ.design.clearDrawing()">🗑️ Chizmani tozalash</button>
+          </div>
+
+          <!-- Center Canvas -->
+          <div class="canvas-stage">
+            <div class="canvas-frame" id="design-canvas-wrap">
+              <canvas id="design-base-canvas" width="420" height="520"></canvas>
+              <canvas id="design-draw-canvas" width="420" height="520"></canvas>
+            </div>
+            <div class="canvas-hint">💡 Maslahat: Ko‘ylak ustiga naqsh yoki qo‘shimcha chiziqlar chizing!</div>
+          </div>
+
+          <!-- Right Templates -->
+          <div class="tool-panel">
+            <h4>👗 Fason va Qismlar</h4>
+            <div class="template-group">
+              <label>Etak shakli:</label>
+              <div class="chip-grid" id="tpl-skirts"></div>
+            </div>
+            <div class="template-group">
+              <label>Yoqa / Yuqori qism:</label>
+              <div class="chip-grid" id="tpl-bodices"></div>
+            </div>
+            <div class="template-group">
+              <label>Yeng turi:</label>
+              <div class="chip-grid" id="tpl-sleeves"></div>
+            </div>
+            <div class="template-group">
+              <label>Libos nomi:</label>
+              <input type="text" id="dress-name-input" class="luxury-input" value="Malika Orzusi" maxlength="28" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 3. COLORING STUDIO ==================== -->
+      <section id="screen-coloring" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🎨 2-Bosqich: Bo‘yash va Bezash Studiyasi</h2>
+            <p>Ko‘ylak qismlarini tanlang, mato turi, rang va bezaklar qo‘shing</p>
+          </div>
+          <div class="studio-next">
+            <button class="btn-glass" onclick="FQ.nav('design')">⬅️ Dizaynga</button>
+            <button class="btn-gold" onclick="FQ.saveAndGoSewing()">Keyingi: Tikishga o‘tish ➜</button>
+          </div>
+        </div>
+
+        <div class="studio-layout">
+          <!-- Left: Part selector & Colors -->
+          <div class="tool-panel">
+            <h4>🎯 Qismni tanlang</h4>
+            <div class="part-tabs" id="color-part-tabs">
+              <button class="part-btn active" data-part="bodice" onclick="FQ.coloring.selectPart('bodice', this)">👚 Ko‘ylak usti</button>
+              <button class="part-btn" data-part="skirt" onclick="FQ.coloring.selectPart('skirt', this)">👗 Etak qismi</button>
+              <button class="part-btn" data-part="sleeves" onclick="FQ.coloring.selectPart('sleeves', this)">🧥 Yenglar</button>
+              <button class="part-btn" data-part="belt" onclick="FQ.coloring.selectPart('belt', this)">🎀 Kamar & Yoqa</button>
+            </div>
+
+            <h4>🌈 Ranglar Palitrasi</h4>
+            <div class="color-palette" id="coloring-palette"></div>
+            <div class="custom-color-row">
+              <label>Maxsus rang:</label>
+              <input type="color" id="custom-color-picker" value="#9d4edd" oninput="FQ.coloring.applyColor(this.value)" />
+            </div>
+
+            <h4>🧵 Mato va Tekstura</h4>
+            <div class="chip-grid" id="coloring-fabrics"></div>
+          </div>
+
+          <!-- Center Preview Canvas -->
+          <div class="canvas-stage">
+            <div class="canvas-frame">
+              <canvas id="coloring-canvas" width="420" height="520"></canvas>
+            </div>
+            <div class="canvas-hint">✨ Bezak ustiga bosing va ko‘ylakdagi o‘rnini ko‘ring!</div>
+          </div>
+
+          <!-- Right: Patterns & Decorations -->
+          <div class="tool-panel">
+            <h4>✨ Naqshlar</h4>
+            <div class="chip-grid" id="coloring-patterns"></div>
+
+            <h4>💎 Bezaklar va Toshlar</h4>
+            <p class="small-note">Qo‘shish uchun bosing (ko‘ylak bo‘ylab joylashadi):</p>
+            <div class="sticker-grid" id="coloring-stickers"></div>
+
+            <div class="action-row" style="margin-top: 12px;">
+              <button class="btn-sm" onclick="FQ.coloring.randomGlam()">🎲 Tasodifiy Stil</button>
+              <button class="btn-danger-sm" onclick="FQ.coloring.clearDecorations()">🧹 Bezaklarni tozalash</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 4. SEWING STUDIO ==================== -->
+      <section id="screen-sewing" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🧵 3-Bosqich: Interaktiv Tikuvchilik Ustaxonasi</h2>
+            <p>Haqiqiy dizayner kabi 6 bosqichda libosingizni tiking!</p>
+          </div>
+          <div class="sewing-progress-pill">
+            Bosqich: <span id="sewing-step-num">1</span> / 6
+          </div>
+        </div>
+
+        <div class="sewing-stepper" id="sewing-stepper">
+          <div class="s-step active" data-step="1">1. Mato</div>
+          <div class="s-step" data-step="2">2. O‘lchash</div>
+          <div class="s-step" data-step="3">3. Bichish</div>
+          <div class="s-step" data-step="4">4. Tikish</div>
+          <div class="s-step" data-step="5">5. Tugma & Fermuar</div>
+          <div class="s-step" data-step="6">6. Tayyor!</div>
+        </div>
+
+        <div class="sewing-workspace">
+          <div class="sewing-canvas-box">
+            <canvas id="sewing-canvas" width="660" height="440"></canvas>
+          </div>
+          <div class="sewing-controls-box" id="sewing-controls">
+            <!-- Dynamically populated per step -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 5. 3D SHOWROOM & BOUTIQUE ==================== -->
+      <section id="screen-showroom" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🏛️ 4-Bosqich: 3D Moda Saroyi va Butik</h2>
+            <p>Liboslaringizni 3D manekenda aylantirib ko‘ring, kolleksiya boshqaring va tangaga soting</p>
+          </div>
+          <div class="studio-next">
+            <button class="btn-glass" onclick="FQ.showroom.toggleRotate()">🔄 Aylantirish</button>
+            <button class="btn-gold" onclick="FQ.startNewWorkflow()">➕ Yangi libos yaratish</button>
+          </div>
+        </div>
+
+        <div class="showroom-layout">
+          <div class="three-container">
+            <div id="three-canvas-holder"></div>
+            <div class="three-overlay-info">
+              <div id="showroom-active-name">Libos tanlanmagan</div>
+              <div id="showroom-active-price">Narxi: 0 🪙</div>
+            </div>
+            <div class="three-actions">
+              <button class="btn-gold" id="btn-sell-dress" onclick="FQ.showroom.sellSelected()">💰 Butikda sotish</button>
+              <button class="btn-glass" onclick="FQ.showroom.featureSelected()">⭐ Bosh sahifaga qo‘yish</button>
+            </div>
+          </div>
+
+          <div class="collection-panel">
+            <h4>👗 Mening Kolleksiyam (<span id="col-count">0</span>)</h4>
+            <div class="collection-list" id="collection-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 6. FASHION ACADEMY ==================== -->
+      <section id="screen-academy" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🎓 Moda Akademiyasi</h2>
+            <p>Har bir darsni o‘qing, mini-topshiriqni bajaring va tangalar yuting!</p>
+          </div>
+        </div>
+        <div class="academy-grid" id="academy-grid"></div>
+      </section>
+
+      <!-- ==================== 7. DAILY MISSIONS ==================== -->
+      <section id="screen-missions" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🎯 Kundalik va Maxsus Topshiriqlar</h2>
+            <p>Topshiriqlarni bajaring va hashamatli mukofotlarga ega bo‘ling</p>
+          </div>
+        </div>
+        <div class="missions-list" id="missions-list"></div>
+      </section>
+
+      <!-- ==================== 8. SHOP ==================== -->
+      <section id="screen-shop" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🛍️ Hashamatli Matolar va Jihozlar Do‘koni</h2>
+            <p>Tangalaringizga yangi qimmatbaho matolar, bezaklar va soch turmaklari oling</p>
+          </div>
+        </div>
+        <div class="shop-grid" id="shop-grid"></div>
+      </section>
+
+      <!-- ==================== 9. CONTESTS & LEADERBOARD ==================== -->
+      <section id="screen-contest" class="screen">
+        <div class="studio-header">
+          <div>
+            <h2>🏆 Moda Tanlovlari va Reyting</h2>
+            <p>Yaratgan libosingizni podiumga chiqaring va "Fashion Queen" unvoniga kurashing!</p>
+          </div>
+        </div>
+        <div class="contest-layout">
+          <div class="contest-card">
+            <h3>👑 Bugungi Podium Tanlovi: "Qirollik Bali"</h3>
+            <p>Hakamlar libosingizning rang uyg‘unligi, mato sifati va bezaklarini baholaydi.</p>
+            <div class="contest-select-wrap">
+              <label>Tanlovga qo‘yiladigan libos:</label>
+              <select id="contest-dress-select" class="luxury-input"></select>
+            </div>
+            <button class="btn-play-glow" style="margin-top:16px;" onclick="FQ.contest.enter()">✨ Podiumga Chiqarish</button>
+            <div id="contest-result" class="contest-result"></div>
+          </div>
+
+          <div class="leaderboard-card">
+            <h3>🌟 Top Dizaynerlar Reytingi</h3>
+            <div id="leaderboard-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Academy Lesson / Avatar Modal -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this) FQ.closeModal()">
+    <div class="modal-box" id="modal-box"></div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="toast-container"></div>
+</body>
+</html>
+
